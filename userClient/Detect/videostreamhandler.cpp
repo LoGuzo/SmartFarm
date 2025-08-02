@@ -74,24 +74,17 @@ void VideoStreamHandler::initialize() {
         loop = nullptr;
     }
 
-    // std::string launch = "rtspsrc location=" + url.toStdString() + " tls-validation-flags=0 latency=100 protocols=udp retry=3 timeout=5000000 "
-    //                                                                "! queue max-size-buffers=10 leaky=downstream ! rtph264depay "
-    //                                                                "! queue max-size-buffers=10 leaky=downstream ! h264parse config-interval=1 "
-    //                                                                "! queue max-size-buffers=10 leaky=downstream ! d3d11h264dec "
-    //                                                                "! videoconvert "
-    //                                                                "! video/x-raw,format=RGB "
-    //                                                                "! appsink name=sink ";
 
-    //std::string launch =  "rtspsrc location=" + url.toStdString() + " tls-validation-flags=0 latency=100 protocols=tcp ! "
-                                                                   "decodebin ! videoconvert ! video/x-raw,format=RGB ! appsink name=sink";
-
-    std::string launch =  "rtspsrc location=" + url.toStdString() + " tls-validation-flags=0 drop-on-latency=true latency=100 protocols=tcp ! "
-                                                                  "queue max-size-buffers=10 leaky=downstream ! "
-                                                                  "decodebin ! "
-                                                                  "queue ! "
-                                                                  "videoconvert ! "
-                                                                  "video/x-raw,format=RGB ! "
-                                                                  "appsink name=sink ";
+    std::string launch =
+       "rtspsrc location=" + url.toStdString() + " tls-validation-flags=0 drop-on-latency=true latency=100 protocols=tcp ! "
+                                                 "rtph264depay ! "
+                                                 "h264parse ! "
+                                                 "d3d12h264dec ! "
+                                                 "d3d11convert ! "       // GPU→CPU 변환 (필수)
+                                                 "d3d11download ! "      // GPU→CPU 메모리 복사
+                                                 "videoconvert ! "
+                                                 "video/x-raw,format=RGB ! "
+                                                "appsink name=sink";
 
     GError *error = nullptr;
     pipeline = gst_parse_launch(launch.c_str(), &error);
@@ -198,7 +191,9 @@ GstFlowReturn VideoStreamHandler::onNewSample(GstAppSink *sink, gpointer user_da
     gst_structure_get_int(s, "height", &height);
 
     QImage img(reinterpret_cast<const uchar*>(info.data),
-               width, height, QImage::Format_RGB888);
+               width, height,
+               width * 3,
+               QImage::Format_RGB888);
     QImage frame = img.copy();
 
     QMetaObject::invokeMethod(self, [self, frame]() {
