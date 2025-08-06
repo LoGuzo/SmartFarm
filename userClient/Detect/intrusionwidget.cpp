@@ -65,7 +65,7 @@ void IntrusionWidget::setupBarChart()
     }
     barSet->setColor(QColor("#33aa88"));  // 메인 민트 컬러
     barSet->setBorderColor(QColor("#1de9b6")); // 엣지 민트
-    barSet->setLabelBrush(QColor("#aef3c0")); // 값 표시 색
+    barSet->setLabelBrush(QColor("#ffffff")); // 값 표시 색
     barSet->setLabelFont(QFont("Segoe UI", 10, QFont::Bold));
 
     // 2. BarSeries 설정
@@ -79,7 +79,7 @@ void IntrusionWidget::setupBarChart()
     barChart->addSeries(barSeries);
     barChart->setTitle("Hourly Intrusion Events");
     barChart->setTitleFont(QFont("Segoe UI", 13));
-    barChart->setTitleBrush(QBrush(QColor("#aef3c0")));
+    barChart->setTitleBrush(QBrush(QColor("#ffffff")));
     barChart->setBackgroundVisible(false);
     barChart->setBackgroundBrush(Qt::NoBrush);
     barChart->setPlotAreaBackgroundVisible(false);
@@ -91,8 +91,8 @@ void IntrusionWidget::setupBarChart()
         axisX->append(QString("%1시").arg(i), i);
     }
     axisX->setRange(0, 23);
-    axisX->setLabelsColor(QColor("#aef3c0"));
-    axisX->setTitleBrush(QBrush(QColor("#aef3c0")));
+    axisX->setLabelsColor(QColor("#ffffff"));
+    axisX->setTitleBrush(QBrush(QColor("#ffffff")));
     axisX->setTitleText("Hour");
     axisX->setTitleFont(QFont("Segoe UI", 11));
     axisX->setLabelsFont(QFont("Segoe UI", 9));
@@ -109,8 +109,8 @@ void IntrusionWidget::setupBarChart()
     axisY->setRange(0, 5);
     axisY->setLabelFormat("%d");
     axisY->setTitleText("Count");
-    axisY->setLabelsColor(QColor("#aef3c0"));
-    axisY->setTitleBrush(QBrush(QColor("#aef3c0")));
+    axisY->setLabelsColor(QColor("#ffffff"));
+    axisY->setTitleBrush(QBrush(QColor("#ffffff")));
     axisY->setTitleFont(QFont("Segoe UI", 11));
     axisY->setLabelsFont(QFont("Segoe UI", 9));
     axisY->setGridLinePen(gridPen);

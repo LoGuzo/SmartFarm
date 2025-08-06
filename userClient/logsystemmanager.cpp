@@ -68,8 +68,10 @@ void LogSystemManager::populateModel(QStandardItemModel* model) {
         row << new QStandardItem(e.timestamp.toString(Qt::ISODate))
             << new QStandardItem(e.eventName)
             << new QStandardItem(e.eventDetail);
-        for (auto* it : row)
+        for (auto* it : row){
             it->setTextAlignment(Qt::AlignCenter);
+            it->setForeground(QColor("#ffffff"));
+        }
         model->appendRow(row);
     }
 }

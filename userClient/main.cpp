@@ -11,6 +11,9 @@
 #include "sensorreceive.h"
 #include "mapactivereceive.h"
 #include "LogSystemManager.h"
+#include <QApplication>
+#include <QFontDatabase>
+#include <QFont>
 
 #define IP "192.168.0.46"
 #define PORT "60000"  // 문자열 형태로 getaddrinfo에 넘김
@@ -50,6 +53,24 @@ int main(int argc, char *argv[]) {
     LogSystemManager::instance().loadLogData();
 
     QApplication app(argc, argv);
+
+    // ✅ 폰트 등록 및 전역 적용
+    int id = QFontDatabase::addApplicationFont(":/prefix/prefix/Greyscale Basic Regular.ttf");
+
+    if (id == -1) {
+        qDebug() << "❌ 폰트 등록 실패: 리소스 경로를 확인하세요.";
+    } else {
+        QStringList families = QFontDatabase::applicationFontFamilies(id);
+        if (families.isEmpty()) {
+            qDebug() << "❌ 폰트 등록은 되었지만 패밀리 이름을 가져올 수 없습니다.";
+        } else {
+            QString Greyscale_Basic = families.at(0);
+            qDebug() << "✅ 폰트 등록 성공! 패밀리 이름:" << Greyscale_Basic;
+
+            QFont customFont(Greyscale_Basic);
+        }
+    }
+
     MainWindow w;
     w.setWindowTitle("🌱 스마트팜 통합 모니터링 시스템");
     w.resize(1000, 700);

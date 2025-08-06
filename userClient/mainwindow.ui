@@ -28,8 +28,7 @@ QMainWindow, QAbstractScrollArea {
 /* ===== 공통 QLabel ===== */
 QLabel {
     background-color: transparent;
-    color: #aef3c0;
-    font-family: 'Segoe UI';
+    color: #ffffff;
     font-size: 20px;
 }
 /* QLabel (email:, pass:) */
@@ -40,13 +39,23 @@ QLabel#mymailLabel  {
     font-weight: bold;
 }
 
+QLabel#label_fire,
+QLabel#label_main,
+QLabel#label_intrusion,
+QLabel#label_strawberry,
+QLabel#label_log  {
+    font-family: 'GreyscaleBasic';
+ 	font-weight: bold;
+	color: #aef3c0;
+}
+
 /*색있는 Label*/
 QLabel#videoLabel1,
 QLabel#videoLabel2,
 QLabel#videoLabel3,
 QLabel#videoLabel4 {
     background-color: #112424;
-    color: #aef3c0;
+    color: #ffffff;
     border: 0.5px dashed #1de9b6;
     font-family: 'Segoe UI';
     font-size: 20px;
@@ -77,12 +86,13 @@ QToolButton#btnGrowth,
 QToolButton#btnIntrusion,
 QToolButton#btnLog {
     background-color: #143d35;
-    color: #aef3c0;
+    color: #ffffff;
     border: 0.3px solid #1de9b6;
     padding: 8px 12px;
     border-radius: 10px;
-    font-family: 'Segoe UI';
+    font-family: 'GreyscaleBasic';
     font-size: 25pt;
+	font-weight: bold;
 	text-align: center;
 	padding-left: 30px;
 }
@@ -102,7 +112,7 @@ QToolButton#btnMail {
 /* ===== QTableWidget ===== */
 QTableWidget {
     background-color: #0d1e1e;
-    color: #b8f1cc;
+    color: #ffffff;
     border: 1px solid #33aa88;
     gridline-color: #1de9b6;
     font-family: 'Segoe UI';
@@ -155,6 +165,7 @@ QHeaderView::section {
 /* 셀 내부 */
 QTableWidget::item {
     padding: 8px 10px;
+	color: #ffffff;
 }
 
 /* 스크롤바 */
@@ -177,7 +188,7 @@ QChartView {
 /* ===== QCalendarWidget ===== */
 QCalendarWidget {
     background-color: #0d1e1e;
-    color: #aef3c0;
+    color: #ffffff;
     font-family: 'Segoe UI', 'Noto Sans KR';
     font-size: 14px;
     border-radius: 10px;
@@ -208,7 +219,7 @@ QCalendarWidget QToolButton#qt_calendar_nextmonth {
 
 QCalendarWidget QTableView QHeaderView::section {
     background-color: #0f2e2e;
-    color: #aef3c0;
+    color: #ffffff ;
     font-family: 'Segoe UI', 'Noto Sans KR';
     font-weight: normal;
     padding: 4px;
@@ -217,7 +228,7 @@ QCalendarWidget QTableView QHeaderView::section {
 
 QCalendarWidget QAbstractItemView {
     background-color: #0d1e1e;
-    color: #aef3c0;
+    color: #ffffff;
     selection-background-color: #1de9b6;
     selection-color: #0d1e1e;
     gridline-color: #1de9b6;
@@ -243,7 +254,7 @@ QLineEdit {
     border-radius: 5px;
     padding: 5px;
     background-color: white;
-    color: #143d35;
+    color: #ffffff;
     selection-background-color: #aef3c0;
 }</string>
   </property>

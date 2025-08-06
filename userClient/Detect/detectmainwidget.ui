@@ -64,7 +64,7 @@
         <string notr="true"/>
        </property>
        <property name="text">
-        <string>Intrusion</string>
+        <string>     Intrusion</string>
        </property>
       </widget>
      </item>
@@ -86,7 +86,7 @@
         <string notr="true"/>
        </property>
        <property name="text">
-        <string>Fire</string>
+        <string>       Fire</string>
        </property>
       </widget>
      </item>
@@ -108,7 +108,7 @@
         <string notr="true"/>
        </property>
        <property name="text">
-        <string>Growth</string>
+        <string>     Growth</string>
        </property>
       </widget>
      </item>
@@ -130,7 +130,7 @@
         <string notr="true"/>
        </property>
        <property name="text">
-        <string>Log</string>
+        <string>         Log</string>
        </property>
       </widget>
      </item>
@@ -257,7 +257,7 @@
     </layout>
    </item>
    <item row="1" column="0" colspan="5">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="label_main">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
        <horstretch>0</horstretch>
@@ -295,7 +295,7 @@
      <item>
       <widget class="QLabel" name="label_temhum">
        <property name="text">
-        <string>TextLabel</string>
+        <string/>
        </property>
       </widget>
      </item>

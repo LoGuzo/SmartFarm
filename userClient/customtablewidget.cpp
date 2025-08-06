@@ -57,7 +57,6 @@ void CustomTableWidget::setDateHour(const std::string& dateHour){
 }
 
 void CustomTableWidget::initModelAndView() {
-    // Initialize UI components on main thread
     QMetaObject::invokeMethod(this, [this] {
         m_pixmaps.clear();
 
@@ -75,28 +74,23 @@ void CustomTableWidget::initModelAndView() {
         connect(m_proxy, &PaginationProxyModel::layoutChanged,
                 this, &CustomTableWidget::refreshPage);
 
+        ui->eventTable->setModel(m_proxy); // ① 모델 뷰 연결 먼저!!!
+
         QHeaderView *header = ui->eventTable->horizontalHeader();
-        header->setDefaultAlignment(Qt::AlignCenter);               // 헤더 텍스트 가운데 정렬
-        header->setSectionsMovable(false);                          // 드래그로 열 순서 못 바꾸게
-        header->setStretchLastSection(false);                       // 마지막 열 자동 확장 비활성화
-        header->setSectionResizeMode(QHeaderView::Stretch);         // 전체를 Stretch로 설정
+        header->setDefaultAlignment(Qt::AlignCenter);
+        header->setSectionsMovable(false);
+        header->setStretchLastSection(false);
+        header->setSectionResizeMode(0, QHeaderView::Fixed);
+        ui->eventTable->setColumnWidth(0, 45);
+        header->setSectionResizeMode(1, QHeaderView::Stretch);
+        header->setSectionResizeMode(2, QHeaderView::Stretch);
+        header->setSectionResizeMode(3, QHeaderView::Stretch);
 
-        // 필요한 경우, 열별로 비율 다르게 하고 싶다면 아래 코드 참고
-        // (Stretch 상태에서는 비율 조절은 직접적으로 불가. Fixed로 바꿔야 함)
-        // header->setSectionResizeMode(0, QHeaderView::Stretch); // Image
-        // header->setSectionResizeMode(1, QHeaderView::Stretch); // Num
-        // header->setSectionResizeMode(2, QHeaderView::Stretch); // Eventname
-        // header->setSectionResizeMode(3, QHeaderView::Stretch); // Date
-
-        ui->eventTable->setModel(m_proxy);
         updateButtons();
 
-        // Span first row across all columns
         int cols = m_sourceModel->columnCount();
         ui->eventTable->setSpan(0, 0, 1, cols);
     }, Qt::QueuedConnection);
-
-    // Directly load data (no QtConcurrent)
     loadData(0);
 }
 
@@ -126,7 +120,7 @@ void CustomTableWidget::onNewData(const QStringList& fields) {
     // 3) Num 칼럼 아이템
     QStandardItem* numItem = new QStandardItem(QString::number(globalNum));
     numItem->setTextAlignment(Qt::AlignCenter);
-    numItem->setForeground(QColor("#b8f1cc"));
+    numItem->setForeground(QColor("#ffffff"));
     items.append(numItem);
 
     // 4) Date, Eventname 칼럼
@@ -134,7 +128,7 @@ void CustomTableWidget::onNewData(const QStringList& fields) {
         QStandardItem* item = new QStandardItem(f);
         item->setTextAlignment(Qt::AlignCenter);
         //item->setBackground(QColor("#0d1e1e"));   // 메인 배경색
-        item->setForeground(QColor("#b8f1cc"));
+        item->setForeground(QColor("#ffffff"));
         items.append(item);
     }
 

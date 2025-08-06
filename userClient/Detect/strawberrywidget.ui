@@ -47,12 +47,12 @@
       <enum>Qt::LayoutDirection::RightToLeft</enum>
      </property>
      <property name="text">
-      <string> home</string>
+      <string> Home</string>
      </property>
     </widget>
    </item>
    <item row="0" column="1">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="label_strawberry">
      <property name="minimumSize">
       <size>
        <width>0</width>

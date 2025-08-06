@@ -53,8 +53,8 @@ void FireDetectWidget::setupChart()
     axisX = new QDateTimeAxis;
     axisX->setFormat("HH:mm");  // 더 정밀하게 보기
     axisX->setTitleText("Time");
-    axisX->setTitleBrush(QBrush(QColor("#aef3c0")));
-    axisX->setLabelsColor(QColor("#aef3c0"));
+    axisX->setTitleBrush(QBrush(QColor("#ffffff")));
+    axisX->setLabelsColor(QColor("#ffffff"));
     axisX->setGridLineColor(QColor("#225544"));
     chart->addAxis(axisX, Qt::AlignBottom);
     co2Series->attachAxis(axisX);
@@ -66,8 +66,8 @@ void FireDetectWidget::setupChart()
     // 4. Y축 (농도)
     axisY = new QValueAxis;
     axisY->setTitleText("농도 (ppm)");
-    axisY->setTitleBrush(QBrush(QColor("#aef3c0")));
-    axisY->setLabelsColor(QColor("#aef3c0"));
+    axisY->setTitleBrush(QBrush(QColor("#ffffff")));
+    axisY->setLabelsColor(QColor("#ffffff"));
     axisY->setGridLineColor(QColor("#225544"));
     axisY->setRange(300, 2000);  // 🔧 더 넓게 잡아서 보장
     chart->addAxis(axisY, Qt::AlignLeft);

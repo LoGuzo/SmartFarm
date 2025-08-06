@@ -133,8 +133,8 @@ void StrawBerryWidget::setupLineChart()
     axisX = new QDateTimeAxis;
     axisX->setFormat("MM-dd");
     axisX->setTitleText("Date");
-    axisX->setTitleBrush(QBrush(QColor("#aef3c0")));
-    axisX->setLabelsColor(QColor("#aef3c0"));
+    axisX->setTitleBrush(QBrush(QColor("#ffffff")));
+    axisX->setLabelsColor(QColor("#ffffff"));
     axisX->setGridLineColor(QColor("#225544"));
     chart->addAxis(axisX, Qt::AlignBottom);
     ripeSeries->attachAxis(axisX);
@@ -142,8 +142,8 @@ void StrawBerryWidget::setupLineChart()
     // Y축
     axisY = new QValueAxis;
     axisY->setTitleText("Count");
-    axisY->setTitleBrush(QBrush(QColor("#aef3c0")));
-    axisY->setLabelsColor(QColor("#aef3c0"));
+    axisY->setTitleBrush(QBrush(QColor("#ffffff")));
+    axisY->setLabelsColor(QColor("#ffffff"));
     axisY->setGridLineColor(QColor("#225544"));
     axisY->setRange(0, 10);
     chart->addAxis(axisY, Qt::AlignLeft);
@@ -207,16 +207,22 @@ void StrawBerryWidget::updateLineChartFromData() {
 
 void StrawBerryWidget::onPieSliceClicked(QPieSlice* slice)
 {
-    QString label = slice->label();
-    updateLineChartFromData(label);
+    QString category = slice->label();
 
-    if (label == "disease") {
-        tableWidget->setClassType("");  // 전체 요청
+    // ✅ label -> 내부 데이터 키로 매핑
+    if (category == "Ripe") category = "ripe";
+    else if (category == "Unripe") category = "unripe";
+    else if (category == "Disease") category = "disease";
+
+    if (category == "disease") {
+        showDiseaseMode(true);
+        QMetaObject::invokeMethod(this, [=]() {
+            updateLineChartFromData(category);
+        }, Qt::QueuedConnection);
     } else {
-        tableWidget->setClassType(label.toStdString());  // 평소처럼 동작
+        updateLineChartFromData(category);
     }
 }
-
 void StrawBerryWidget::updatePieChartFromTable()
 {
     QPieSeries* series = new QPieSeries();
@@ -235,9 +241,18 @@ void StrawBerryWidget::updatePieChartFromTable()
     }
 
     for (auto it = eventCounts.begin(); it != eventCounts.end(); ++it) {
-        QPieSlice* slice = new QPieSlice(it.key(), it.value());
-        if (it.key() == "ripe") slice->setBrush(QColor("#f28b82"));
-        else if (it.key() == "unripe") slice->setBrush(QColor("#81c995"));
+        QString rawKey = it.key();
+        QString labelText;  // ✅ 변경됨
+
+        // ✅ 범례 텍스트를 첫 글자 대문자로 설정
+        if (rawKey == "ripe") labelText = "Ripe";
+        else if (rawKey == "unripe") labelText = "Unripe";
+        else if (rawKey == "disease") labelText = "Disease";
+        else labelText = rawKey;
+
+        QPieSlice* slice = new QPieSlice(labelText, it.value());  // ✅ 변경됨
+        if (rawKey == "ripe") slice->setBrush(QColor("#f28b82"));
+        else if (rawKey == "unripe") slice->setBrush(QColor("#81c995"));
         else slice->setBrush(QColor("#9e9e9e"));
         slice->setPen(Qt::NoPen);
         slice->setLabelVisible(false);
@@ -246,8 +261,11 @@ void StrawBerryWidget::updatePieChartFromTable()
 
     connect(series, &QPieSeries::clicked, this, [=](QPieSlice* slice) {
         QString category = slice->label();
-        if (category != "ripe" && category != "unripe") {
-            category = "disease";
+        if (category == "Ripe") category = "ripe";            // ✅ 변경됨
+        else if (category == "Unripe") category = "unripe";    // ✅ 변경됨
+        else if (category == "Disease") category = "disease";  // ✅ 변경됨
+
+        if (category == "disease") {
             showDiseaseMode(true);  // UI 조작
             QMetaObject::invokeMethod(this, [=]() {
                 updateLineChartFromData(category);  // 안전한 비동기 호출
@@ -260,18 +278,18 @@ void StrawBerryWidget::updatePieChartFromTable()
     QChart* chart = new QChart();
     chart->addSeries(series);
     chart->setTitle("Strawberry Status");
-    chart->setTitleBrush(QBrush(QColor("#aef3c0"))); // ✅ 제목 색상 민트로
+    chart->setTitleBrush(QBrush(QColor("#ffffff"))); // ✅ 제목 색상 민트로
 
     chart->setBackgroundVisible(false);
     chart->setBackgroundBrush(Qt::NoBrush);
     chart->setPlotAreaBackgroundVisible(false);
     chart->setMargins(QMargins(0, 0, 0, 0));
     chart->legend()->setVisible(true);
-    chart->legend()->setLabelColor(QColor("#aef3c0"));     // ✅ 추가
+    chart->legend()->setLabelColor(QColor("#ffffff"));     // ✅ 추가
     chart->legend()->setFont(QFont("Segoe UI", 11));       // ✅ 추가
     // ✅ 범례 네모 테두리 제거
     for (QLegendMarker* marker : chart->legend()->markers(series)) {
-        marker->setLabelBrush(QBrush(QColor("#aef3c0")));
+        marker->setLabelBrush(QBrush(QColor("#ffffff")));
         marker->setPen(QPen(QColor("#0d1e1e")));
     }
 
@@ -396,7 +414,16 @@ void StrawBerryWidget::showDiseaseMode(bool enable)
     }
 }
 
-
+QMap<QString, QColor> diseaseColorMap = {
+    { "Angular Leafspot",       QColor(85, 107, 47) },     // 진녹/올리브
+    { "Anthracnose Fruit Rot",  QColor(230, 126, 34) },    // 오렌지
+    { "Blossom Blight",         QColor(238, 130, 238) },   // 연분홍
+    { "Gray Mold",              QColor(128, 128, 128) },   // 회색
+    { "Leaf Spot",              QColor(139, 69, 19) },     // 진갈색
+    { "Powdery Mildew Fruit",   QColor(203, 195, 227) },   // 연보라
+    { "Powdery Mildew Leaf",    QColor(144, 238, 144) },   // 연녹색
+    { "Ripe",                   QColor(220, 30, 70) },     // 진빨강 (← 안 써도 되지만 참고)
+};
 void StrawBerryWidget::showDiseasePieChart()
 {
     if (diseasePieChartView) {
@@ -420,6 +447,10 @@ void StrawBerryWidget::showDiseasePieChart()
     for (auto it = diseaseCounts.begin(); it != diseaseCounts.end(); ++it) {
         QPieSlice* slice = new QPieSlice(it.key(), it.value());
         slice->setLabelVisible(true);
+        // ✅ 색상 지정
+        if (diseaseColorMap.contains(it.key())) {
+            slice->setColor(diseaseColorMap[it.key()]);
+        }
         diseaseSeries->append(slice);
         slice->setPen(Qt::NoPen); // ✅ append 이후에 호출!
     }

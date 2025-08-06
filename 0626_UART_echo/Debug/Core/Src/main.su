@@ -1,0 +1,17 @@
+../Core/Src/main.c:89:16:PCF8591_ReadChannel	32	static
+../Core/Src/main.c:100:6:HAL_UART_RxCpltCallback	16	static
+../Core/Src/main.c:127:21:adc8_to_mv	16	static
+../Core/Src/main.c:130:21:emf_mv_to_emf	16	static
+../Core/Src/main.c:133:14:ntc_calc_celsius	64	static
+../Core/Src/main.c:141:13:push_avg	40	static
+../Core/Src/main.c:155:7:calc_ppm	24	static
+../Core/Src/main.c:165:5:main	216	static
+../Core/Src/main.c:274:6:SystemClock_Config	88	static
+../Core/Src/main.c:317:6:HAL_TIM_IC_CaptureCallback	16	static
+../Core/Src/main.c:344:5:__io_putchar	16	static
+../Core/Src/main.c:350:6:delay_us	32	static
+../Core/Src/main.c:356:6:DHT11_Start	32	static
+../Core/Src/main.c:375:9:DHT11_CheckResponse	8	static
+../Core/Src/main.c:387:9:DHT11_ReadByte	16	static
+../Core/Src/main.c:399:7:DHT11_ReadTemp	16	static
+../Core/Src/main.c:420:6:Error_Handler	4	static,ignoring_inline_asm

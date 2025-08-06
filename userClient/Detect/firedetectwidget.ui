@@ -54,7 +54,7 @@
       <enum>Qt::LayoutDirection::RightToLeft</enum>
      </property>
      <property name="text">
-      <string> home</string>
+      <string> Home</string>
      </property>
     </widget>
    </item>

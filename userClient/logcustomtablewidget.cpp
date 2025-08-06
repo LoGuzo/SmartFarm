@@ -114,8 +114,10 @@ void LogCustomTableWidget::onLogAppended(const LogEntry& e) {
     row << new QStandardItem(e.timestamp.toString("yyyy-MM-dd hh:mm:ss"))
         << new QStandardItem(e.eventName)
         << new QStandardItem(e.eventDetail);
-    for (auto* it : row)
+    for (auto* it : row){
         it->setTextAlignment(Qt::AlignCenter);
+        it->setForeground(QColor("#ffffff"));
+    }
 
     // 맨 위(0번 행)에 삽입
     m_sourceModel->insertRow(0, row);

@@ -13,6 +13,7 @@ MailDialog::MailDialog(QWidget *parent)
     setWindowTitle("메일 설정");
     setModal(true);
     connect(ui->buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, this, &MailDialog::okButtonClicked);
+    this->setWindowFlags(Qt::Dialog | Qt::FramelessWindowHint);
 }
 
 MailDialog::~MailDialog()

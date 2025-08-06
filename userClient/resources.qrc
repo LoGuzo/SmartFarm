@@ -13,4 +13,7 @@
         <file>icons/car2.png</file>
         <file>icons/mail2.png</file>
     </qresource>
+    <qresource prefix="/prefix">
+        <file>prefix/Greyscale Basic Regular.ttf</file>
+    </qresource>
 </RCC>

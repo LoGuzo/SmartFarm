@@ -46,7 +46,7 @@ DrawMap::DrawMap(QGraphicsView *view_, QObject *parent)
 
 void DrawMap::feedLine(const QByteArray &lineRaw) {
     QString line = QString::fromUtf8(lineRaw).trimmed();
-
+    qDebug() << "[Debug]" << line;
     if (line == "SPLIT") {
         section = BoundsSection;
         boundsData.clear();
@@ -158,22 +158,31 @@ QPointF DrawMap::scale(double x, double y) const {
     double effW = mapW - 2 * mapInnerPad;
     double effH = mapH - 2 * mapInnerPad;
 
-    double sx = (inW > 1e-6) ? ((x - minX) / inW * effW) : effW / 2.0;
-    double sy = (inH > 1e-6) ? ((y - minY) / inH * effH) : effH / 2.0;
+    // X, Y축 → 둘 중 더 작은 배율(scaleFactor)만큼만 스케일
+    double scaleX = effW / inW;
+    double scaleY = effH / inH;
+    double scaleFactor = std::min(scaleX, scaleY);
 
-    sx += mapOriginX + mapInnerPad;
-    sy += mapOriginY + mapInnerPad;
+    double sx = (x - minX) * scaleFactor;
+    double sy = (y - minY) * scaleFactor;
+
+    // 나머지 여백을 중앙정렬 (좌우/위아래 패딩)
+    double leftoverW = effW - inW * scaleFactor;
+    double leftoverH = effH - inH * scaleFactor;
+    sx += mapOriginX + mapInnerPad + leftoverW / 2.0;
+    sy += mapOriginY + mapInnerPad + leftoverH / 2.0;
+
     return QPointF(sx, sy);
+
 }
 
 void DrawMap::drawBounds() {
     if (boundsData.isEmpty() || mapData.size() < 2) return;
 
-    for (const auto &evt : boundsData) {
+    for (int bi = 1; bi < boundsData.size(); ++bi) {
+        const auto &evt = boundsData[bi];
         if (!classColor.contains(evt.cls))
-            continue; // color table에 없는 라벨은 건너뜀
-
-        // 1. 이벤트 ts에 해당하는 구간 탐색
+            continue;
         int i = 0;
         while (i < mapData.size() - 1 && evt.ts > mapData[i + 1].ts)
             ++i;
@@ -208,11 +217,16 @@ void DrawMap::drawMap() {
     minX = minY = std::numeric_limits<double>::max();
     maxX = maxY = -std::numeric_limits<double>::max();
     for (const auto &pt : mapData) {
-        minX = std::min(minX, pt.cx);   maxX = std::max(maxX, pt.cx);
-        minY = std::min(minY, pt.cy);   maxY = std::max(maxY, pt.cy);
+        // x좌표 최대/최소
+        minX = std::min({minX, pt.cx, pt.lx, pt.rx});
+        maxX = std::max({maxX, pt.cx, pt.lx, pt.rx});
+        // y좌표 최대/최소
+        minY = std::min({minY, pt.cy, pt.ly, pt.ry});
+        maxY = std::max({maxY, pt.cy, pt.ly, pt.ry});
     }
     if (minX == maxX) { minX -= 0.5; maxX += 0.5; }
     if (minY == maxY) { minY -= 0.5; maxY += 0.5; }
+
 
     // --- 곡선/경로 ---
     QPainterPath path;
@@ -258,6 +272,10 @@ void DrawMap::drawMap() {
         QColor col = it.value();
         scene->addEllipse(lx, ly + idx * spacing, 2*r, 2*r, QPen(Qt::black, 2), QBrush(col));
         auto *txt = scene->addText(it.key(), legendFont);
+
+        if(it.key() == "ripe")
+            txt = scene->addText("Ripe", legendFont);
+
         txt->setDefaultTextColor(Qt::white);
         txt->setPos(lx + 2*r + 8, ly + idx*spacing - 4);
     }
